@@ -18,8 +18,7 @@ Herramientas necesarias
 
 #PRIMER PASO
 
-descargar el reposiorio en el siguiente enlace
-############
+descargar el reposiorio en el siguiente enlace https://github.com/fernandop99/Proyecto-de-Graduacion.git)
 
 #SEGUNDO PASO
 
