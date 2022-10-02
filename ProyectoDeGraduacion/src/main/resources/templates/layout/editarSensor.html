@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head>
+        <title>Editar Cliente</title>
+        <meta charset="UTF-8"/>
+    </head>
+    <body>
+        <section th:fragment="editarSensor">
+            <form th:action="@{/guardar}" th:object="${sensor}"
+                  method="POST" class="was-validated">
+                <input type="hidden" name="idSensor" th:field="*{idSensor}"/>
+                <section th:replace="layout/botonesEditar :: botonesEditar"></section>
+                <div id="details">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4>[[#{accion.editar}]]</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <label for="nombre">[[#{sensor.nombre}]]</label>
+                                            <input type="text" class="form-control" name="nombre" 
+                                                   required="true" th:field="*{nombre}"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="descripcion">[[#{sensor.descripcion}]]</label>
+                                            <input type="text" class="form-control" name="descripcion" 
+                                                   required="true" th:field="*{descripcion}"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="tipoRiego">[[#{sensor.tipo-riego}]]</label>
+                                            <input type="number" class="form-control" name="tipoRiego" 
+                                                   required="true" th:field="*{tipoRiego}"/>
+                                        </div>                                       
+                                        <div class="form-group">
+                                            <label for="tiempoRiego">[[#{sensor.tiempo-riego}]]</label>
+                                            <input type="number" class="form-control" name="tiempoRiego" 
+                                                   required="true" th:field="*{tiempoRiego}" min="0" max="10000"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="email">[[#{sensor.email}]]</label>
+                                            <input type="email" class="form-control" name="email" 
+                                                   required="true" th:field="*{email}"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="tiempoEnvioMensaje">[[#{sensor.tiempo-envio-mensaje}]]</label>
+                                            <input type="number" class="form-control" name="tiempoEnvioMensaje" 
+                                                   required="true" th:field="*{tiempoEnvioMensaje}" min="1"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="notificaciones">[[#{sensor.notificaciones}]]</label>
+                                            <input type="number" class="form-control" name="notificaciones" 
+                                                   required="true" th:field="*{notificaciones}"/>
+                                        </div>
+                                         
+                                         <div class="form-group">
+                                            <label for="humedadMinima">[[#{sensor.humedad-minima}]]</label>
+                                            <input type="number" class="form-control" name="humedadMinima" 
+                                                   required="true" th:field="*{humedadMinima}" step="any"  min="0" max="100"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </body>
+</html>

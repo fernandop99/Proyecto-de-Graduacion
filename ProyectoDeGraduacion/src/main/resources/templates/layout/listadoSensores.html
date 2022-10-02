@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head>
+        <title>Listado Sensores</title>
+        <meta charset="UTF-8"/>
+        
+    </head>
+    <body>
+        <section th:fragment="listadoSensores" id="sensores">
+            <div id="chart_div" style="width: 1000px; height: 350px;"></div>
+            <br/>
+            <script th:inline="javascript">
+		//var real_data = /*[[${chartData}]]*/'noValue';
+                var medicionesSensores = /*[[${datosMediciones}]]*/'noValue';
+                
+		$(document).ready(function() {
+			google.charts.load('current', {
+				packages : [ 'corechart', 'bar' ,'annotationchart']
+			});
+			/*google.charts.setOnLoadCallback(drawColumnChart);
+			google.charts.setOnLoadCallback(drawPieChart);*/
+                        google.charts.setOnLoadCallback(drawChart);
+		});
+
+		/*function drawColumnChart() {
+			var data = new google.visualization.DataTable();
+			data.addColumn('string', 'Year');
+			data.addColumn('number', 'Views');
+			Object.keys(real_data).forEach(function(key) {
+				data.addRow([ key, real_data[key] ]);
+			});
+			var options = {
+				title : 'Blog stats',
+				hAxis : {
+					title : 'Years',
+				},
+				vAxis : {
+					title : 'View Count'
+				}
+			};
+			var chart = new google.visualization.ColumnChart(document
+					.getElementById('column_chart_div'));
+			chart.draw(data, options);
+		}
+
+		function drawPieChart() {
+			var data = new google.visualization.DataTable();
+			data.addColumn('string', 'Year');
+			data.addColumn('number', 'Views');
+			Object.keys(real_data).forEach(function(key) {
+				data.addRow([ key, real_data[key] ]);
+			});
+			var options = {
+				title : 'Blog stats'
+			};
+			var chart = new google.visualization.PieChart(document
+					.getElementById('piechart'));
+			chart.draw(data, options);
+		}*/
+                
+                function drawChart() {
+                    console.log("Se ejecuta drawChart");
+                    var data = new google.visualization.DataTable();
+                    data.addColumn('date', 'Date');
+                    data.addColumn('number', 'Sensor 1');
+                    //data.addColumn('number', 'Sensor 2');
+                   
+                    
+       
+                    
+                    
+                   /* data.addRows([
+                      [new Date(2022, 2, 15, 8,0,0), 18, undefined, undefined,
+                                              55, undefined, undefined],
+                      [new Date(ts), 25, undefined, undefined,
+                                              18, 'Sensor 2', 'Humedad minima'],
+                      [new Date(2022, 2, 15,8,10,0), 49, undefined, undefined,
+                                              35, undefined, undefined],
+                      [new Date(2022, 2, 15,8,15,0), 80, 'Sensor 1', 'Humedad maxima',
+                                              70, undefined, undefined],
+                      [new Date(2022, 2, 15,8,20,0), 50, undefined, undefined,
+                                              95, 'Sensor 2', 'Humedad maxima'],
+                      [new Date(2022, 2, 15,8,25,0), 10, 'Sensor 1', 'Humedad minima',
+                                              55, undefined, undefined]
+                    ]);*/
+
+                    var chart = new google.visualization.AnnotationChart(document.getElementById('chart_div'));
+
+                    var inicio = new Date(Number(Date.now() - 1000*60*60));
+                    var fin = new Date(Number(Date.now()));
+                    //console.log(inicio);
+                    //console.log(fin);
+                    var options = {
+                      displayAnnotations: true,
+                      dateFormat:  'HH:mm MMMM dd, yyyy',
+                      zoomStartTime: inicio,
+                      zoomEndTime: fin
+                    };
+                    
+                    
+                     Object.keys(medicionesSensores).forEach(function(key) {                              
+				data.addRow([new Date(Number(medicionesSensores[key][0])), 
+                                             Number(medicionesSensores[key][1])                                             
+                                             ]
+                                            );
+			});
+
+                    chart.draw(data, options);
+                    
+                   
+                    
+                  }
+                  
+                  
+
+	//var date = new Date();
+	//document.getElementById("p1").innerHTML = date;
+
+	</script>
+            
+            
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>[[#{sensor.titulo-lista}]]</h4>
+                            </div>
+                            <div th:if="${sensores != null and !sensores.empty}">
+                                <table class="table table-stryped">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>#</th>
+                                            <th th:text="#{sensor.nombre}">Nombre</th>
+                                            <th th:text="#{sensor.descripcion}">Descripcion</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="sensor, contador : ${sensores}">
+                                            <td>[[${contador.count}]]</td>
+                                            <td>[[${sensor.nombre}]]</td>
+                                            <td>[[${sensor.descripcion}]]</td>
+                                            <td>
+                                                <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/editar/} + ${sensor.idSensor}"
+                                                   class="btn btn-secondary">
+                                                    <i class="fas fa-angle-double-right"></i> [[#{accion.editar}]]
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/eliminar(idSensor=${sensor.idSensor})}"
+                                                   class="btn btn-dark">
+                                                    <i class="fas fa-angle-double-right"></i> [[#{accion.eliminar}]]
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center p-2" th:if="${sensores == null or sensores.empty}">
+                                <span th:text="#{sensor.lista-vacia}">Lista vacía</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                
+
+                        <div class="card text-center bg-success text-white mb-3">
+                            <div class="card-body">
+                                <h3 th:text="#{sensor.totalSensores}">Total Sensores</h3>
+                                <h4 class="display-4">
+                                    <i class="fas fa-users"></i> [[${totalSensores}]]
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        
+    </body>
+</html>
